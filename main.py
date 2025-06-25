@@ -39,3 +39,20 @@ if __name__ == "__main__":
             loop.close()
         except Exception:
             pass
+import asyncio
+import os
+from aiohttp import web
+
+async def dummy(request):
+    return web.Response(text="Bot is running")
+
+async def run():
+    app = web.Application()
+    app.router.add_get('/', dummy)
+    port = int(os.environ.get("PORT", 8080))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+
+asyncio.get_event_loop().run_until_complete(run())
